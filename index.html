@@ -14,6 +14,10 @@
       --text: #1C1410;
       --muted: #8A7E75;
       --border: #E8E0D6;
+      --green: #3A7D5A;
+      --green-light: #E8F3ED;
+      --red: #C25B3F;
+      --red-light: #F5EAE6;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -29,10 +33,7 @@
       color: var(--text);
     }
 
-    header {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
+    header { text-align: center; margin-bottom: 2rem; }
 
     .logo {
       font-family: 'Amiri', serif;
@@ -85,20 +86,45 @@
       color: var(--muted);
     }
 
-    .progress-row {
+    .stats-row {
       display: flex;
-      justify-content: space-between;
+      gap: 0.75rem;
       width: 100%;
       max-width: 420px;
-      margin-bottom: 0.6rem;
-      font-size: 0.82rem;
-      color: var(--muted);
+      margin-bottom: 0.75rem;
     }
+
+    .stat-box {
+      flex: 1;
+      background: var(--card-bg);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 0.6rem 0.75rem;
+      text-align: center;
+    }
+
+    .stat-box .stat-num {
+      font-size: 1.3rem;
+      font-weight: 600;
+      line-height: 1;
+    }
+
+    .stat-box .stat-label {
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-top: 0.15rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .stat-box.good .stat-num { color: var(--green); }
+    .stat-box.bad .stat-num { color: var(--accent); }
+    .stat-box.total .stat-num { color: var(--text); }
 
     .progress-bar-wrap {
       width: 100%;
       max-width: 420px;
-      height: 4px;
+      height: 6px;
       background: var(--border);
       border-radius: 99px;
       margin-bottom: 1.5rem;
@@ -107,7 +133,7 @@
 
     .progress-bar {
       height: 100%;
-      background: var(--accent);
+      background: var(--green);
       border-radius: 99px;
       transition: width 0.4s ease;
     }
@@ -115,7 +141,7 @@
     .scene {
       width: 100%;
       max-width: 420px;
-      height: 260px;
+      height: 240px;
       perspective: 1200px;
       margin-bottom: 1rem;
       cursor: pointer;
@@ -164,7 +190,7 @@
     .face-back .face-label { color: rgba(255,255,255,0.6); }
 
     .face-word {
-      font-size: 1.9rem;
+      font-size: 1.8rem;
       font-weight: 600;
       text-align: center;
       line-height: 1.3;
@@ -174,9 +200,8 @@
 
     .face-back .face-word {
       font-family: 'Amiri', serif;
-      font-size: 2.2rem;
+      font-size: 2rem;
       color: #fff;
-      direction: rtl;
     }
 
     .face-hint {
@@ -189,7 +214,42 @@
       font-size: 0.78rem;
       color: var(--muted);
       text-align: center;
-      margin-bottom: 1.25rem;
+      margin-bottom: 1rem;
+    }
+
+    /* Boutons réponse — cachés tant que la carte n'est pas retournée */
+    .btn-answer-row {
+      display: none;
+      gap: 0.75rem;
+      width: 100%;
+      max-width: 420px;
+      margin-bottom: 0.75rem;
+    }
+
+    .btn-answer-row.visible { display: flex; }
+
+    .btn {
+      flex: 1;
+      padding: 0.85rem 1rem;
+      border-radius: 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.12s;
+    }
+
+    .btn:active { transform: scale(0.97); }
+
+    .btn-good {
+      background: var(--green-light);
+      color: var(--green);
+    }
+
+    .btn-bad {
+      background: var(--accent-light);
+      color: var(--accent);
     }
 
     .btn-row {
@@ -199,7 +259,7 @@
       max-width: 420px;
     }
 
-    .btn {
+    .btn-shuffle {
       flex: 1;
       padding: 0.85rem 1rem;
       border-radius: 14px;
@@ -208,12 +268,12 @@
       font-weight: 600;
       border: none;
       cursor: pointer;
+      background: var(--accent-light);
+      color: var(--accent);
       transition: transform 0.12s;
     }
 
-    .btn:active { transform: scale(0.97); }
-    .btn-next { background: var(--accent); color: white; }
-    .btn-shuffle { background: var(--accent-light); color: var(--accent); }
+    .btn-shuffle:active { transform: scale(0.97); }
 
     .empty-state {
       width: 100%;
@@ -246,7 +306,7 @@
     .end-screen.visible { display: flex; }
     .end-icon { font-size: 3rem; margin-bottom: 1rem; }
     .end-screen h2 { font-size: 1.4rem; font-weight: 600; margin-bottom: 0.5rem; }
-    .end-screen p { color: var(--muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
+    .end-screen p { color: var(--muted); font-size: 0.9rem; margin-bottom: 1.5rem; line-height: 1.6; }
 
     .btn-restart {
       background: var(--accent);
@@ -279,9 +339,19 @@
   </div>
 </div>
 
-<div class="progress-row">
-  <span id="progressText"></span>
-  <span id="chapterLabel"></span>
+<div class="stats-row">
+  <div class="stat-box good">
+    <div class="stat-num" id="statGood">0</div>
+    <div class="stat-label">✓ Acquises</div>
+  </div>
+  <div class="stat-box bad">
+    <div class="stat-num" id="statBad">0</div>
+    <div class="stat-label">✗ À revoir</div>
+  </div>
+  <div class="stat-box total">
+    <div class="stat-num" id="statTotal">0</div>
+    <div class="stat-label">Total</div>
+  </div>
 </div>
 
 <div class="progress-bar-wrap">
@@ -313,33 +383,40 @@
 
 <p class="tap-hint" id="tapHint">Appuie sur la carte pour voir la Darija</p>
 
+<!-- Boutons visibles seulement après retournement -->
+<div class="btn-answer-row" id="btnAnswer">
+  <button class="btn btn-bad" onclick="answer(false)">✗ Je savais pas</button>
+  <button class="btn btn-good" onclick="answer(true)">✓ Je savais</button>
+</div>
+
 <div class="btn-row" id="btnRow">
-  <button class="btn btn-shuffle" onclick="loadChapter()">🔀 Remélanger</button>
-  <button class="btn btn-next" onclick="nextCard()">Suivante →</button>
+  <button class="btn-shuffle" onclick="loadChapter()">🔀 Recommencer</button>
 </div>
 
 <div class="end-screen" id="endScreen">
   <div class="end-icon">🎉</div>
-  <h2>Chapitre terminé !</h2>
-  <p>Tu as vu toutes les cartes. Envie de recommencer ?</p>
+  <h2>Toutes les cartes acquises !</h2>
+  <p id="endMsg"></p>
   <button class="btn-restart" onclick="loadChapter()">Recommencer</button>
 </div>
 
 <script src="cartes.js"></script>
 
 <script>
-  let deck = [];
-  let currentIndex = 0;
+  // ============================================================
+  //  État de la session
+  // ============================================================
+  let allCards = [];       // toutes les cartes du chapitre
+  let mastered = new Set(); // index des cartes acquises
+  let failed = new Set();   // index des cartes ratées
+  let queue = [];           // file de jeu en cours
+  let currentCard = null;   // carte affichée
+  let isFlipped = false;
+  let roundCount = 0;       // nombre de passages total
 
-  function shuffle(arr) {
-    const a = [...arr];
-    for (let i = a.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [a[i], a[j]] = [a[j], a[i]];
-    }
-    return a;
-  }
-
+  // ============================================================
+  //  Init menu
+  // ============================================================
   function buildChapterMenu() {
     const sel = document.getElementById('chapterSelect');
     while (sel.options.length > 1) sel.remove(1);
@@ -356,71 +433,174 @@
     });
   }
 
+  // ============================================================
+  //  Charger un chapitre
+  // ============================================================
   function loadChapter() {
     const val = document.getElementById('chapterSelect').value;
-    const filtered = (!cardsData || cardsData.length === 0)
+    allCards = (!cardsData || cardsData.length === 0)
       ? []
-      : val === 'all' ? cardsData : cardsData.filter(c => c.ch === val);
+      : val === 'all' ? [...cardsData] : cardsData.filter(c => c.ch === val);
 
-    if (filtered.length === 0) {
+    if (allCards.length === 0) {
       document.getElementById('emptyState').classList.add('visible');
       document.getElementById('scene').style.display = 'none';
       document.getElementById('tapHint').style.display = 'none';
+      document.getElementById('btnAnswer').classList.remove('visible');
       document.getElementById('btnRow').style.display = 'none';
       document.getElementById('endScreen').classList.remove('visible');
-      document.getElementById('progressText').textContent = '';
-      document.getElementById('chapterLabel').textContent = '';
       return;
     }
+
+    mastered = new Set();
+    failed = new Set();
+    roundCount = 0;
 
     document.getElementById('emptyState').classList.remove('visible');
     document.getElementById('endScreen').classList.remove('visible');
     document.getElementById('scene').style.display = '';
     document.getElementById('tapHint').style.display = '';
     document.getElementById('btnRow').style.display = '';
+    document.getElementById('statTotal').textContent = allCards.length;
 
-    deck = shuffle(filtered);
-    currentIndex = 0;
-
-    document.getElementById('chapterLabel').textContent =
-      val === 'all' ? `${filtered.length} cartes` : `Ch.${val} · ${filtered.length} cartes`;
-
-    showCard();
+    // Première queue : toutes les cartes mélangées
+    queue = buildQueue();
+    updateStats();
+    nextCard();
   }
 
-  function showCard() {
-    if (currentIndex >= deck.length) { showEnd(); return; }
-    const c = deck[currentIndex];
-    document.getElementById('wordFront').textContent = c.f;
-    document.getElementById('wordBack').textContent = c.b;
-    document.getElementById('wordHint').textContent = c.chNom || `Chapitre ${c.ch}`;
-    document.getElementById('card').classList.remove('flipped');
-    const pct = (currentIndex / deck.length) * 100;
-    document.getElementById('progressBar').style.width = pct + '%';
-    document.getElementById('progressText').textContent =
-      `Carte ${currentIndex + 1} / ${deck.length}`;
+  // ============================================================
+  //  Construire la file de jeu
+  //  Cartes ratées + quelques cartes acquises mélangées dedans
+  // ============================================================
+  function buildQueue() {
+    const notMastered = allCards
+      .map((c, i) => i)
+      .filter(i => !mastered.has(i));
+
+    // On glisse quelques cartes acquises (max 20%) pour varier
+    const masteredList = [...mastered];
+    const bonus = shuffle(masteredList).slice(0, Math.ceil(masteredList.length * 0.2));
+
+    return shuffle([...notMastered, ...bonus]);
   }
 
-  function flipCard() {
-    document.getElementById('card').classList.toggle('flipped');
+  function shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
   }
 
+  // ============================================================
+  //  Afficher la prochaine carte
+  // ============================================================
   function nextCard() {
-  const card = document.getElementById('card');
-  card.classList.remove('flipped');
-  setTimeout(() => {
-    currentIndex++;
-    showCard();
-  }, 550);
-}
+    if (queue.length === 0) {
+      if (mastered.size === allCards.length) {
+        showEnd();
+        return;
+      }
+      // Reconstruire la file avec les cartes non acquises
+      queue = buildQueue();
+      roundCount++;
+    }
 
+    const idx = queue.shift();
+    currentCard = { ...allCards[idx], idx };
+
+    isFlipped = false;
+    document.getElementById('btnAnswer').classList.remove('visible');
+    document.getElementById('tapHint').style.display = '';
+
+    const card = document.getElementById('card');
+    card.classList.remove('flipped');
+
+    setTimeout(() => {
+      document.getElementById('wordFront').textContent = currentCard.f;
+      document.getElementById('wordBack').textContent = currentCard.b;
+      document.getElementById('wordHint').textContent = currentCard.chNom || `Chapitre ${currentCard.ch}`;
+    }, 300);
+
+    updateStats();
+  }
+
+  // ============================================================
+  //  Retourner la carte
+  // ============================================================
+  function flipCard() {
+    if (isFlipped) return;
+    isFlipped = true;
+    document.getElementById('card').classList.add('flipped');
+    setTimeout(() => {
+      document.getElementById('btnAnswer').classList.add('visible');
+      document.getElementById('tapHint').style.display = 'none';
+    }, 400);
+  }
+
+  // ============================================================
+  //  Réponse : je savais / je savais pas
+  // ============================================================
+  function answer(knew) {
+    const idx = currentCard.idx;
+
+    if (knew) {
+      mastered.add(idx);
+      failed.delete(idx);
+    } else {
+      failed.add(idx);
+      mastered.delete(idx);
+      // Remettre la carte dans la file dans 2-4 cartes
+      const pos = Math.min(2 + Math.floor(Math.random() * 3), queue.length);
+      queue.splice(pos, 0, idx);
+    }
+
+    updateStats();
+
+    // Vérifier si tout est acquis
+    if (mastered.size === allCards.length) {
+      setTimeout(showEnd, 200);
+      return;
+    }
+
+    // Passer à la suivante
+    document.getElementById('btnAnswer').classList.remove('visible');
+    const card = document.getElementById('card');
+    card.classList.remove('flipped');
+    setTimeout(() => {
+      nextCard();
+    }, 550);
+  }
+
+  // ============================================================
+  //  Stats + barre de progression
+  // ============================================================
+  function updateStats() {
+    const total = allCards.length;
+    const good = mastered.size;
+    const bad = failed.size;
+    document.getElementById('statGood').textContent = good;
+    document.getElementById('statBad').textContent = bad;
+    document.getElementById('statTotal').textContent = total;
+    document.getElementById('progressBar').style.width = (good / total * 100) + '%';
+  }
+
+  // ============================================================
+  //  Écran de fin
+  // ============================================================
   function showEnd() {
     document.getElementById('endScreen').classList.add('visible');
     document.getElementById('scene').style.display = 'none';
     document.getElementById('tapHint').style.display = 'none';
+    document.getElementById('btnAnswer').classList.remove('visible');
     document.getElementById('btnRow').style.display = 'none';
     document.getElementById('progressBar').style.width = '100%';
-    document.getElementById('progressText').textContent = 'Terminé ! 🎉';
+
+    const total = allCards.length;
+    document.getElementById('endMsg').textContent =
+      `Tu as validé les ${total} cartes en ${roundCount + 1} passage${roundCount > 0 ? 's' : ''}.`;
   }
 
   buildChapterMenu();
