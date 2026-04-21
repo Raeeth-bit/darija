@@ -1,128 +1,426 @@
-// ============================================================
-//  📚 TES CARTES — Cours 1
-//  Format : { ch: "X", chNom: "Nom du chapitre", f: "Français", b: "Darija" }
-//  Pour ajouter un cours : copie un bloc et change ch + chNom
-// ============================================================
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Darija Flashcards</title>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #FAF7F2;
+      --card-bg: #FFFFFF;
+      --accent: #C25B3F;
+      --accent-light: #F5EAE6;
+      --text: #1C1410;
+      --muted: #8A7E75;
+      --border: #E8E0D6;
+    }
 
-const cardsData = [
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  // ----------------------------------------
-  // Chapitre 1 — Se présenter : le prénom
-  // ----------------------------------------
-  { ch: "1", chNom: "Se présenter : prénom",
-    f: "Je m'appelle ... / Mon nom est ...",
-    b: "Ana smiti ... / Smiya diali ..." },
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem 1rem 4rem;
+      color: var(--text);
+    }
 
-  // ----------------------------------------
-  // Chapitre 2 — Se présenter : l'âge
-  // ----------------------------------------
-  { ch: "2", chNom: "Se présenter : âge",
-    f: "J'ai ... ans / Mon âge est ...",
-    b: "3endi ... 3am / 3emri ... 3am (عندي ... عام)" },
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
 
-  // ----------------------------------------
-  // Chapitre 3 — Se présenter : la nationalité
-  // ----------------------------------------
-  { ch: "3", chNom: "Se présenter : nationalité",
-    f: "Je suis de (pays)",
-    b: "Ana men ... (أنا من ...)" },
+    .logo {
+      font-family: 'Amiri', serif;
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
 
-  { ch: "3", chNom: "Se présenter : nationalité",
-    f: "Je suis (nationalité)",
-    b: "Ana ... (ex: Faransi = Français)" },
+    .logo-sub {
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 500;
+    }
 
-  // ----------------------------------------
-  // Chapitre 4 — Mots interrogatifs
-  // ----------------------------------------
-  { ch: "4", chNom: "Mots interrogatifs",
-    f: "Quoi ?",
-    b: "Chnou ? (شنو)" },
+    .controls {
+      width: 100%;
+      max-width: 420px;
+      margin-bottom: 1.5rem;
+    }
 
-  { ch: "4", chNom: "Mots interrogatifs",
-    f: "Qui ?",
-    b: "Chkoun ? (شكون)" },
+    .select-wrap { position: relative; }
 
-  { ch: "4", chNom: "Mots interrogatifs",
-    f: "Quand ?",
-    b: "Imta / Fo9ach ? (إمتى / فوقاش)" },
+    select {
+      width: 100%;
+      padding: 0.75rem 2.5rem 0.75rem 1rem;
+      font-size: 0.95rem;
+      font-family: 'DM Sans', sans-serif;
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      background: var(--card-bg);
+      color: var(--text);
+      appearance: none;
+      cursor: pointer;
+      outline: none;
+      transition: border-color 0.2s;
+    }
 
-  { ch: "4", chNom: "Mots interrogatifs",
-    f: "Où ?",
-    b: "Fin (فين)" },
+    select:focus { border-color: var(--accent); }
 
-  { ch: "4", chNom: "Mots interrogatifs",
-    f: "Comment ?",
-    b: "Ki fach ? (كيفاش)" },
+    .select-arrow {
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: var(--muted);
+    }
 
-  { ch: "4", chNom: "Mots interrogatifs",
-    f: "Pourquoi ?",
-    b: "3elach ? (علاش)" },
+    .progress-row {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 420px;
+      margin-bottom: 0.6rem;
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
 
-  { ch: "4", chNom: "Mots interrogatifs",
-    f: "Combien ?",
-    b: "Ch7al ? (شحال)" },
+    .progress-bar-wrap {
+      width: 100%;
+      max-width: 420px;
+      height: 4px;
+      background: var(--border);
+      border-radius: 99px;
+      margin-bottom: 1.5rem;
+      overflow: hidden;
+    }
 
-  { ch: "4", chNom: "Mots interrogatifs",
-    f: "D'où ?",
-    b: "Mnin ? (منين)" },
+    .progress-bar {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 99px;
+      transition: width 0.4s ease;
+    }
 
-  { ch: "4", chNom: "Mots interrogatifs",
-    f: "À qui ?",
-    b: "Lemen ? (لمن)" },
+    .scene {
+      width: 100%;
+      max-width: 420px;
+      height: 260px;
+      perspective: 1200px;
+      margin-bottom: 1rem;
+      cursor: pointer;
+    }
 
-  { ch: "4", chNom: "Mots interrogatifs",
-    f: "Lequel ?",
-    b: "Achrmen ? (أشرمن)" },
+    .card {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.55s cubic-bezier(0.4, 0.2, 0.2, 1);
+    }
 
-  { ch: "4", chNom: "Mots interrogatifs",
-    f: "Avec qui ?",
-    b: "H3amen ? (مع من)" },
+    .card.flipped { transform: rotateY(180deg); }
 
-  { ch: "4", chNom: "Mots interrogatifs",
-    f: "Est-ce que ?",
-    b: "Wach ? (واش)" },
+    .face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      border: 1.5px solid var(--border);
+    }
 
-  // ----------------------------------------
-  // Chapitre 5 — Questions courantes
-  // ----------------------------------------
-  { ch: "5", chNom: "Questions courantes",
-    f: "Comment tu t'appelles ?",
-    b: "Chnou smitek ? (شنو سميتك)" },
+    .face-front { background: var(--card-bg); }
 
-  { ch: "5", chNom: "Questions courantes",
-    f: "D'où viens-tu ?",
-    b: "Mnin jiti ? / Mnin nta (nti) ? (منين جيتي)" },
+    .face-back {
+      background: var(--accent);
+      transform: rotateY(180deg);
+      border-color: var(--accent);
+    }
 
-  { ch: "5", chNom: "Questions courantes",
-    f: "Quel âge as-tu ?",
-    b: "Ch7al fi 3emrek ? / Ch7al 3endek ? (شحال في عمرك)" },
+    .face-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
 
-  { ch: "5", chNom: "Questions courantes",
-    f: "Où habites-tu ?",
-    b: "Fin saken ? (فين ساكن)" },
+    .face-front .face-label { color: var(--muted); }
+    .face-back .face-label { color: rgba(255,255,255,0.6); }
 
-  { ch: "5", chNom: "Questions courantes",
-    f: "Que fais-tu dans la vie ?",
-    b: "Achnou kadir fi l7ayat ? (أشنو كادير في الحياة)" },
+    .face-word {
+      font-size: 1.9rem;
+      font-weight: 600;
+      text-align: center;
+      line-height: 1.3;
+    }
 
-  { ch: "5", chNom: "Questions courantes",
-    f: "Comment ça va ? / Ça va ?",
-    b: "Labas 3alik ? / Labas ? (لاباس عليك)" },
+    .face-front .face-word { color: var(--text); }
 
-  { ch: "5", chNom: "Questions courantes",
-    f: "Où est ... ?",
-    b: "Fin kayn ... ? / Fin ja ... ? (فين كاين)" },
+    .face-back .face-word {
+      font-family: 'Amiri', serif;
+      font-size: 2.2rem;
+      color: #fff;
+      direction: rtl;
+    }
 
-  { ch: "5", chNom: "Questions courantes",
-    f: "Combien ça coûte ?",
-    b: "Bch7al hada (hadi) ? (بشحال هادا)" },
+    .face-hint {
+      margin-top: 0.75rem;
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.5);
+    }
 
-  { ch: "5", chNom: "Questions courantes",
-    f: "Quelle heure est-il ?",
-    b: "Ch7al fi sa3a ? (شحال في الساعة)" },
+    .tap-hint {
+      font-size: 0.78rem;
+      color: var(--muted);
+      text-align: center;
+      margin-bottom: 1.25rem;
+    }
 
-  { ch: "5", chNom: "Questions courantes",
-    f: "Tu peux répéter s'il te plaît ?",
-    b: "Momkin t3awed (i), 3afak ? (ممكن تعاود، عفاك)" },
+    .btn-row {
+      display: flex;
+      gap: 0.75rem;
+      width: 100%;
+      max-width: 420px;
+    }
 
-];
+    .btn {
+      flex: 1;
+      padding: 0.85rem 1rem;
+      border-radius: 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.12s;
+    }
+
+    .btn:active { transform: scale(0.97); }
+    .btn-next { background: var(--accent); color: white; }
+    .btn-shuffle { background: var(--accent-light); color: var(--accent); }
+
+    .empty-state {
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+      padding: 3rem 2rem;
+      background: var(--card-bg);
+      border-radius: 20px;
+      border: 1.5px solid var(--border);
+      display: none;
+    }
+
+    .empty-state.visible { display: block; }
+    .empty-state p { color: var(--muted); font-size: 0.9rem; line-height: 1.6; }
+    .empty-state strong { color: var(--text); }
+
+    .end-screen {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      width: 100%;
+      max-width: 420px;
+      padding: 2.5rem 2rem;
+      background: var(--card-bg);
+      border-radius: 20px;
+      border: 1.5px solid var(--border);
+    }
+
+    .end-screen.visible { display: flex; }
+    .end-icon { font-size: 3rem; margin-bottom: 1rem; }
+    .end-screen h2 { font-size: 1.4rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .end-screen p { color: var(--muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
+
+    .btn-restart {
+      background: var(--accent);
+      color: white;
+      padding: 0.85rem 2rem;
+      border-radius: 14px;
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">دارجة</div>
+  <div class="logo-sub">Flashcards · Arabe Marocain</div>
+</header>
+
+<div class="controls">
+  <div class="select-wrap">
+    <select id="chapterSelect" onchange="loadChapter()">
+      <option value="all">Tous les chapitres (mélangés)</option>
+    </select>
+    <svg class="select-arrow" width="12" height="7" viewBox="0 0 12 7" fill="none">
+      <path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+    </svg>
+  </div>
+</div>
+
+<div class="progress-row">
+  <span id="progressText"></span>
+  <span id="chapterLabel"></span>
+</div>
+
+<div class="progress-bar-wrap">
+  <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+</div>
+
+<div class="empty-state" id="emptyState">
+  <div style="font-size:2.5rem; margin-bottom:1rem;">📂</div>
+  <p>
+    <strong>Aucune carte pour l'instant.</strong><br><br>
+    Ouvre le fichier <strong>cartes.js</strong> et ajoute tes mots
+    en suivant le format indiqué dans les commentaires.
+  </p>
+</div>
+
+<div class="scene" id="scene" onclick="flipCard()">
+  <div class="card" id="card">
+    <div class="face face-front">
+      <div class="face-label">Français</div>
+      <div class="face-word" id="wordFront">—</div>
+    </div>
+    <div class="face face-back">
+      <div class="face-label">Darija</div>
+      <div class="face-word" id="wordBack">—</div>
+      <div class="face-hint" id="wordHint"></div>
+    </div>
+  </div>
+</div>
+
+<p class="tap-hint" id="tapHint">Appuie sur la carte pour voir la Darija</p>
+
+<div class="btn-row" id="btnRow">
+  <button class="btn btn-shuffle" onclick="loadChapter()">🔀 Remélanger</button>
+  <button class="btn btn-next" onclick="nextCard()">Suivante →</button>
+</div>
+
+<div class="end-screen" id="endScreen">
+  <div class="end-icon">🎉</div>
+  <h2>Chapitre terminé !</h2>
+  <p>Tu as vu toutes les cartes. Envie de recommencer ?</p>
+  <button class="btn-restart" onclick="loadChapter()">Recommencer</button>
+</div>
+
+<script src="cartes.js"></script>
+
+<script>
+  let deck = [];
+  let currentIndex = 0;
+
+  function shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function buildChapterMenu() {
+    const sel = document.getElementById('chapterSelect');
+    while (sel.options.length > 1) sel.remove(1);
+    if (!cardsData || cardsData.length === 0) return;
+    const seen = new Map();
+    cardsData.forEach(c => {
+      if (!seen.has(c.ch)) seen.set(c.ch, c.chNom || `Chapitre ${c.ch}`);
+    });
+    seen.forEach((nom, ch) => {
+      const opt = document.createElement('option');
+      opt.value = ch;
+      opt.textContent = `Ch.${ch} — ${nom}`;
+      sel.appendChild(opt);
+    });
+  }
+
+  function loadChapter() {
+    const val = document.getElementById('chapterSelect').value;
+    const filtered = (!cardsData || cardsData.length === 0)
+      ? []
+      : val === 'all' ? cardsData : cardsData.filter(c => c.ch === val);
+
+    if (filtered.length === 0) {
+      document.getElementById('emptyState').classList.add('visible');
+      document.getElementById('scene').style.display = 'none';
+      document.getElementById('tapHint').style.display = 'none';
+      document.getElementById('btnRow').style.display = 'none';
+      document.getElementById('endScreen').classList.remove('visible');
+      document.getElementById('progressText').textContent = '';
+      document.getElementById('chapterLabel').textContent = '';
+      return;
+    }
+
+    document.getElementById('emptyState').classList.remove('visible');
+    document.getElementById('endScreen').classList.remove('visible');
+    document.getElementById('scene').style.display = '';
+    document.getElementById('tapHint').style.display = '';
+    document.getElementById('btnRow').style.display = '';
+
+    deck = shuffle(filtered);
+    currentIndex = 0;
+
+    document.getElementById('chapterLabel').textContent =
+      val === 'all' ? `${filtered.length} cartes` : `Ch.${val} · ${filtered.length} cartes`;
+
+    showCard();
+  }
+
+  function showCard() {
+    if (currentIndex >= deck.length) { showEnd(); return; }
+    const c = deck[currentIndex];
+    document.getElementById('wordFront').textContent = c.f;
+    document.getElementById('wordBack').textContent = c.b;
+    document.getElementById('wordHint').textContent = c.chNom || `Chapitre ${c.ch}`;
+    document.getElementById('card').classList.remove('flipped');
+    const pct = (currentIndex / deck.length) * 100;
+    document.getElementById('progressBar').style.width = pct + '%';
+    document.getElementById('progressText').textContent =
+      `Carte ${currentIndex + 1} / ${deck.length}`;
+  }
+
+  function flipCard() {
+    document.getElementById('card').classList.toggle('flipped');
+  }
+
+  function nextCard() {
+    currentIndex++;
+    showCard();
+  }
+
+  function showEnd() {
+    document.getElementById('endScreen').classList.add('visible');
+    document.getElementById('scene').style.display = 'none';
+    document.getElementById('tapHint').style.display = 'none';
+    document.getElementById('btnRow').style.display = 'none';
+    document.getElementById('progressBar').style.width = '100%';
+    document.getElementById('progressText').textContent = 'Terminé ! 🎉';
+  }
+
+  buildChapterMenu();
+  loadChapter();
+</script>
+</body>
+</html>
