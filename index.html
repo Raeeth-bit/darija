@@ -406,9 +406,13 @@
   }
 
   function nextCard() {
+  const card = document.getElementById('card');
+  card.classList.remove('flipped');
+  setTimeout(() => {
     currentIndex++;
     showCard();
-  }
+  }, 550);
+}
 
   function showEnd() {
     document.getElementById('endScreen').classList.add('visible');
