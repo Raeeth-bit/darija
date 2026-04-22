@@ -16,8 +16,6 @@
       --border: #E8E0D6;
       --green: #3A7D5A;
       --green-light: #E8F3ED;
-      --red: #C25B3F;
-      --red-light: #F5EAE6;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -55,7 +53,7 @@
     .controls {
       width: 100%;
       max-width: 420px;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
     }
 
     .select-wrap { position: relative; }
@@ -84,6 +82,71 @@
       transform: translateY(-50%);
       pointer-events: none;
       color: var(--muted);
+    }
+
+    /* Interrupteur double sens */
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 420px;
+      margin-bottom: 1rem;
+      background: var(--card-bg);
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 0.65rem 1rem;
+    }
+
+    .toggle-label {
+      font-size: 0.88rem;
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .toggle-label span {
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-weight: 400;
+      display: block;
+    }
+
+    .toggle {
+      position: relative;
+      width: 44px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+
+    .toggle input { opacity: 0; width: 0; height: 0; }
+
+    .toggle-track {
+      position: absolute;
+      inset: 0;
+      background: var(--border);
+      border-radius: 99px;
+      cursor: pointer;
+      transition: background 0.25s;
+    }
+
+    .toggle input:checked + .toggle-track {
+      background: var(--accent);
+    }
+
+    .toggle-track::after {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      background: white;
+      border-radius: 50%;
+      top: 3px;
+      left: 3px;
+      transition: transform 0.25s;
+    }
+
+    .toggle input:checked + .toggle-track::after {
+      transform: translateX(20px);
     }
 
     .stats-row {
@@ -178,6 +241,16 @@
       border-color: var(--accent);
     }
 
+    /* Quand le sens est inversé, le recto devient orange et le verso blanc */
+    .face-front.darija-face {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .face-back.fr-face {
+      background: var(--card-bg);
+    }
+
     .face-label {
       font-size: 0.72rem;
       letter-spacing: 0.14em;
@@ -188,6 +261,8 @@
 
     .face-front .face-label { color: var(--muted); }
     .face-back .face-label { color: rgba(255,255,255,0.6); }
+    .face-front.darija-face .face-label { color: rgba(255,255,255,0.6); }
+    .face-back.fr-face .face-label { color: var(--muted); }
 
     .face-word {
       font-size: 1.8rem;
@@ -197,18 +272,17 @@
     }
 
     .face-front .face-word { color: var(--text); }
-
-    .face-back .face-word {
-      font-family: 'Amiri', serif;
-      font-size: 2rem;
-      color: #fff;
-    }
+    .face-back .face-word { font-family: 'Amiri', serif; font-size: 2rem; color: #fff; }
+    .face-front.darija-face .face-word { font-family: 'Amiri', serif; font-size: 2rem; color: #fff; }
+    .face-back.fr-face .face-word { font-family: 'DM Sans', sans-serif; font-size: 1.8rem; color: var(--text); }
 
     .face-hint {
       margin-top: 0.75rem;
       font-size: 0.78rem;
       color: rgba(255,255,255,0.5);
     }
+
+    .face-back.fr-face .face-hint { color: var(--muted); }
 
     .tap-hint {
       font-size: 0.78rem;
@@ -217,7 +291,6 @@
       margin-bottom: 1rem;
     }
 
-    /* Boutons réponse — cachés tant que la carte n'est pas retournée */
     .btn-answer-row {
       display: none;
       gap: 0.75rem;
@@ -241,16 +314,8 @@
     }
 
     .btn:active { transform: scale(0.97); }
-
-    .btn-good {
-      background: var(--green-light);
-      color: var(--green);
-    }
-
-    .btn-bad {
-      background: var(--accent-light);
-      color: var(--accent);
-    }
+    .btn-good { background: var(--green-light); color: var(--green); }
+    .btn-bad { background: var(--accent-light); color: var(--accent); }
 
     .btn-row {
       display: flex;
@@ -339,6 +404,18 @@
   </div>
 </div>
 
+<!-- Interrupteur double sens -->
+<div class="toggle-row">
+  <div class="toggle-label">
+    Mode double sens
+    <span>Français → Darija et Darija → Français</span>
+  </div>
+  <label class="toggle">
+    <input type="checkbox" id="toggleDoubleSens" onchange="loadChapter()" />
+    <div class="toggle-track"></div>
+  </label>
+</div>
+
 <div class="stats-row">
   <div class="stat-box good">
     <div class="stat-num" id="statGood">0</div>
@@ -369,21 +446,20 @@
 
 <div class="scene" id="scene" onclick="flipCard()">
   <div class="card" id="card">
-    <div class="face face-front">
-      <div class="face-label">Français</div>
+    <div class="face face-front" id="faceFront">
+      <div class="face-label" id="labelFront">Français</div>
       <div class="face-word" id="wordFront">—</div>
     </div>
-    <div class="face face-back">
-      <div class="face-label">Darija</div>
+    <div class="face face-back" id="faceBack">
+      <div class="face-label" id="labelBack">Darija</div>
       <div class="face-word" id="wordBack">—</div>
       <div class="face-hint" id="wordHint"></div>
     </div>
   </div>
 </div>
 
-<p class="tap-hint" id="tapHint">Appuie sur la carte pour voir la Darija</p>
+<p class="tap-hint" id="tapHint">Appuie sur la carte pour voir la réponse</p>
 
-<!-- Boutons visibles seulement après retournement -->
 <div class="btn-answer-row" id="btnAnswer">
   <button class="btn btn-bad" onclick="answer(false)">✗ Je savais pas</button>
   <button class="btn btn-good" onclick="answer(true)">✓ Je savais</button>
@@ -403,20 +479,14 @@
 <script src="cartes.js"></script>
 
 <script>
-  // ============================================================
-  //  État de la session
-  // ============================================================
-  let allCards = [];       // toutes les cartes du chapitre
-  let mastered = new Set(); // index des cartes acquises
-  let failed = new Set();   // index des cartes ratées
-  let queue = [];           // file de jeu en cours
-  let currentCard = null;   // carte affichée
+  let allCards = [];
+  let mastered = new Set();
+  let failed = new Set();
+  let queue = [];
+  let currentCard = null;
   let isFlipped = false;
-  let roundCount = 0;       // nombre de passages total
+  let roundCount = 0;
 
-  // ============================================================
-  //  Init menu
-  // ============================================================
   function buildChapterMenu() {
     const sel = document.getElementById('chapterSelect');
     while (sel.options.length > 1) sel.remove(1);
@@ -433,9 +503,6 @@
     });
   }
 
-  // ============================================================
-  //  Charger un chapitre
-  // ============================================================
   function loadChapter() {
     const val = document.getElementById('chapterSelect').value;
     allCards = (!cardsData || cardsData.length === 0)
@@ -463,25 +530,15 @@
     document.getElementById('btnRow').style.display = '';
     document.getElementById('statTotal').textContent = allCards.length;
 
-    // Première queue : toutes les cartes mélangées
     queue = buildQueue();
     updateStats();
     nextCard();
   }
 
-  // ============================================================
-  //  Construire la file de jeu
-  //  Cartes ratées + quelques cartes acquises mélangées dedans
-  // ============================================================
   function buildQueue() {
-    const notMastered = allCards
-      .map((c, i) => i)
-      .filter(i => !mastered.has(i));
-
-    // On glisse quelques cartes acquises (max 20%) pour varier
+    const notMastered = allCards.map((c, i) => i).filter(i => !mastered.has(i));
     const masteredList = [...mastered];
     const bonus = shuffle(masteredList).slice(0, Math.ceil(masteredList.length * 0.2));
-
     return shuffle([...notMastered, ...bonus]);
   }
 
@@ -494,22 +551,19 @@
     return a;
   }
 
-  // ============================================================
-  //  Afficher la prochaine carte
-  // ============================================================
   function nextCard() {
     if (queue.length === 0) {
-      if (mastered.size === allCards.length) {
-        showEnd();
-        return;
-      }
-      // Reconstruire la file avec les cartes non acquises
+      if (mastered.size === allCards.length) { showEnd(); return; }
       queue = buildQueue();
       roundCount++;
     }
 
     const idx = queue.shift();
-    currentCard = { ...allCards[idx], idx };
+    const doubleSens = document.getElementById('toggleDoubleSens').checked;
+    // En mode double sens, on tire au sort le sens de la carte
+    const inverse = doubleSens && Math.random() < 0.5;
+
+    currentCard = { ...allCards[idx], idx, inverse };
 
     isFlipped = false;
     document.getElementById('btnAnswer').classList.remove('visible');
@@ -519,17 +573,42 @@
     card.classList.remove('flipped');
 
     setTimeout(() => {
-      document.getElementById('wordFront').textContent = currentCard.f;
-      document.getElementById('wordBack').textContent = currentCard.b;
-      document.getElementById('wordHint').textContent = currentCard.chNom || `Chapitre ${currentCard.ch}`;
+      renderCard(currentCard);
     }, 300);
 
     updateStats();
   }
 
-  // ============================================================
-  //  Retourner la carte
-  // ============================================================
+  function renderCard(c) {
+    const faceFront = document.getElementById('faceFront');
+    const faceBack = document.getElementById('faceBack');
+    const labelFront = document.getElementById('labelFront');
+    const labelBack = document.getElementById('labelBack');
+    const wordFront = document.getElementById('wordFront');
+    const wordBack = document.getElementById('wordBack');
+    const hint = document.getElementById('wordHint');
+
+    if (!c.inverse) {
+      // Sens normal : Français devant, Darija derrière
+      faceFront.className = 'face face-front';
+      faceBack.className = 'face face-back';
+      labelFront.textContent = 'Français';
+      labelBack.textContent = 'Darija';
+      wordFront.textContent = c.f;
+      wordBack.textContent = c.b;
+    } else {
+      // Sens inversé : Darija devant, Français derrière
+      faceFront.className = 'face face-front darija-face';
+      faceBack.className = 'face face-back fr-face';
+      labelFront.textContent = 'Darija';
+      labelBack.textContent = 'Français';
+      wordFront.textContent = c.b;
+      wordBack.textContent = c.f;
+    }
+
+    hint.textContent = c.chNom || `Chapitre ${c.ch}`;
+  }
+
   function flipCard() {
     if (isFlipped) return;
     isFlipped = true;
@@ -540,9 +619,6 @@
     }, 400);
   }
 
-  // ============================================================
-  //  Réponse : je savais / je savais pas
-  // ============================================================
   function answer(knew) {
     const idx = currentCard.idx;
 
@@ -552,44 +628,30 @@
     } else {
       failed.add(idx);
       mastered.delete(idx);
-      // Remettre la carte dans la file dans 2-4 cartes
       const pos = Math.min(2 + Math.floor(Math.random() * 3), queue.length);
       queue.splice(pos, 0, idx);
     }
 
     updateStats();
 
-    // Vérifier si tout est acquis
     if (mastered.size === allCards.length) {
       setTimeout(showEnd, 200);
       return;
     }
 
-    // Passer à la suivante
     document.getElementById('btnAnswer').classList.remove('visible');
-    const card = document.getElementById('card');
-    card.classList.remove('flipped');
-    setTimeout(() => {
-      nextCard();
-    }, 550);
+    document.getElementById('card').classList.remove('flipped');
+    setTimeout(() => { nextCard(); }, 550);
   }
 
-  // ============================================================
-  //  Stats + barre de progression
-  // ============================================================
   function updateStats() {
     const total = allCards.length;
-    const good = mastered.size;
-    const bad = failed.size;
-    document.getElementById('statGood').textContent = good;
-    document.getElementById('statBad').textContent = bad;
+    document.getElementById('statGood').textContent = mastered.size;
+    document.getElementById('statBad').textContent = failed.size;
     document.getElementById('statTotal').textContent = total;
-    document.getElementById('progressBar').style.width = (good / total * 100) + '%';
+    document.getElementById('progressBar').style.width = (mastered.size / total * 100) + '%';
   }
 
-  // ============================================================
-  //  Écran de fin
-  // ============================================================
   function showEnd() {
     document.getElementById('endScreen').classList.add('visible');
     document.getElementById('scene').style.display = 'none';
@@ -597,10 +659,8 @@
     document.getElementById('btnAnswer').classList.remove('visible');
     document.getElementById('btnRow').style.display = 'none';
     document.getElementById('progressBar').style.width = '100%';
-
-    const total = allCards.length;
     document.getElementById('endMsg').textContent =
-      `Tu as validé les ${total} cartes en ${roundCount + 1} passage${roundCount > 0 ? 's' : ''}.`;
+      `Tu as validé les ${allCards.length} cartes en ${roundCount + 1} passage${roundCount > 0 ? 's' : ''}.`;
   }
 
   buildChapterMenu();
