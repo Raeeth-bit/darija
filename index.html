@@ -610,14 +610,16 @@
   }
 
   function flipCard() {
-    if (isFlipped) return;
+  const card = document.getElementById('card');
+  const flipped = card.classList.toggle('flipped');
+  if (!isFlipped && flipped) {
     isFlipped = true;
-    document.getElementById('card').classList.add('flipped');
     setTimeout(() => {
       document.getElementById('btnAnswer').classList.add('visible');
       document.getElementById('tapHint').style.display = 'none';
     }, 400);
   }
+}
 
   function answer(knew) {
     const idx = currentCard.idx;
