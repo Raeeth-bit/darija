@@ -89,8 +89,8 @@ const cardsData = [
   { ch: "6", chNom: "Mots interrogatifs", f: "Combien ?", b: "Ch7al ?" },
   { ch: "6", chNom: "Mots interrogatifs", f: "D'où ?", b: "Mnin ?" },
   { ch: "6", chNom: "Mots interrogatifs", f: "À qui ?", b: "Lemen ?" },
-  { ch: "6", chNom: "Mots interrogatifs", f: "Lequel ?", b: "Achrmen ?" },
-  { ch: "6", chNom: "Mots interrogatifs", f: "Avec qui ?", b: "H3amen ?" },
+  { ch: "6", chNom: "Mots interrogatifs", f: "Lequel ?", b: "Achmen ?" },
+  { ch: "6", chNom: "Mots interrogatifs", f: "Avec qui ?", b: "M3amen ?" },
   { ch: "6", chNom: "Mots interrogatifs", f: "Est-ce que ?", b: "Wach ?" },
 
   // ----------------------------------------
