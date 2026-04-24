@@ -30,13 +30,13 @@ const cardsData = [
   { ch: "2", chNom: "Nombres 1-10", f: "1 — Un", b: "Wahed" },
   { ch: "2", chNom: "Nombres 1-10", f: "2 — Deux", b: "Jouj" },
   { ch: "2", chNom: "Nombres 1-10", f: "3 — Trois", b: "Tlata" },
-  { ch: "2", chNom: "Nombres 1-10", f: "4 — Quatre", b: "Rb3a" },
+  { ch: "2", chNom: "Nombres 1-10", f: "4 — Quatre", b: "Rb3a", audio: "audio/4.m4a" },
   { ch: "2", chNom: "Nombres 1-10", f: "5 — Cinq", b: "Khmsa" },
   { ch: "2", chNom: "Nombres 1-10", f: "6 — Six", b: "Stta" },
-  { ch: "2", chNom: "Nombres 1-10", f: "7 — Sept", b: "Sb3a" },
+  { ch: "2", chNom: "Nombres 1-10", f: "7 — Sept", b: "Sb3a", audio: "audio/7.m4a" },
   { ch: "2", chNom: "Nombres 1-10", f: "8 — Huit", b: "Tmnya" },
-  { ch: "2", chNom: "Nombres 1-10", f: "9 — Neuf", b: "Ts3oud" },
-  { ch: "2", chNom: "Nombres 1-10", f: "10 — Dix", b: "3chra" },
+  { ch: "2", chNom: "Nombres 1-10", f: "9 — Neuf", b: "Ts3oud", audio: "audio/9.m4a" },
+  { ch: "2", chNom: "Nombres 1-10", f: "10 — Dix", b: "3chra", audio: "audio/10.m4a" },
 
   // ----------------------------------------
   // Chapitre 3 — Nombres 11-20
@@ -44,13 +44,13 @@ const cardsData = [
   { ch: "3", chNom: "Nombres 11-20", f: "11 — Onze", b: "Hdach" },
   { ch: "3", chNom: "Nombres 11-20", f: "12 — Douze", b: "Tnach" },
   { ch: "3", chNom: "Nombres 11-20", f: "13 — Treize", b: "Tlatch" },
-  { ch: "3", chNom: "Nombres 11-20", f: "14 — Quatorze", b: "Rb3tach" },
+  { ch: "3", chNom: "Nombres 11-20", f: "14 — Quatorze", b: "Rb3tach", audio: "audio/14.m4a" },
   { ch: "3", chNom: "Nombres 11-20", f: "15 — Quinze", b: "Khmstach" },
   { ch: "3", chNom: "Nombres 11-20", f: "16 — Seize", b: "Sttach" },
-  { ch: "3", chNom: "Nombres 11-20", f: "17 — Dix-sept", b: "Sb3tach" },
+  { ch: "3", chNom: "Nombres 11-20", f: "17 — Dix-sept", b: "Sb3tach", audio: "audio/17.m4a" },
   { ch: "3", chNom: "Nombres 11-20", f: "18 — Dix-huit", b: "Tmntach" },
   { ch: "3", chNom: "Nombres 11-20", f: "19 — Dix-neuf", b: "Ts3tach" },
-  { ch: "3", chNom: "Nombres 11-20", f: "20 — Vingt", b: "3chrin" },
+  { ch: "3", chNom: "Nombres 11-20", f: "20 — Vingt", b: "3chrin", audio: "audio/20.m4a" },
 
   // ----------------------------------------
   // Chapitre 4 — Nombres 21-100
@@ -86,21 +86,21 @@ const cardsData = [
   { ch: "6", chNom: "Mots interrogatifs", f: "Où ?", b: "Fin" },
   { ch: "6", chNom: "Mots interrogatifs", f: "Comment ?", b: "Ki fach ?" },
   { ch: "6", chNom: "Mots interrogatifs", f: "Pourquoi ?", b: "3elach ?", audio: "audio/pourquoi.m4a" },
-  { ch: "6", chNom: "Mots interrogatifs", f: "Combien ?", b: "Ch7al ?" },
+  { ch: "6", chNom: "Mots interrogatifs", f: "Combien ?", b: "Ch7al ?", audio: "audio/combien.m4a" },
   { ch: "6", chNom: "Mots interrogatifs", f: "D'où ?", b: "Mnin ?" },
   { ch: "6", chNom: "Mots interrogatifs", f: "À qui ?", b: "Lemen ?" },
-  { ch: "6", chNom: "Mots interrogatifs", f: "Lequel ?", b: "Achmen ?" },
-  { ch: "6", chNom: "Mots interrogatifs", f: "Avec qui ?", b: "M3amen ?" },
+  { ch: "6", chNom: "Mots interrogatifs", f: "Lequel ?", b: "Achmen ?", audio: "audio/lequel.m4a" },
+  { ch: "6", chNom: "Mots interrogatifs", f: "Avec qui ?", b: "M3amen ?", audio: "audio/avec qui.m4a" },
   { ch: "6", chNom: "Mots interrogatifs", f: "Est-ce que ?", b: "Wach ?" },
 
   // ----------------------------------------
   // Chapitre 7 — Questions courantes
   // ----------------------------------------
-  { ch: "7", chNom: "Questions courantes", f: "Comment tu t'appelles ?", b: "Chnou smitek ?" },
+  { ch: "7", chNom: "Questions courantes", f: "Comment tu t'appelles ?", b: "Chnou smitek ?", audio: "audio/Comment tu t'appelles _.m4a" },
   { ch: "7", chNom: "Questions courantes", f: "D'où viens-tu ?", b: "Mnin jiti ? / Mnin nta (nti) ?" },
-  { ch: "7", chNom: "Questions courantes", f: "Quel âge as-tu ?", b: "Ch7al fi 3emrek ? / Ch7al 3endek ?" },
+  { ch: "7", chNom: "Questions courantes", f: "Quel âge as-tu ?", b: "Ch7al fi 3emrek ? / Ch7al 3endek ?", audio: "audio/Quel age as tu.m4a" },
   { ch: "7", chNom: "Questions courantes", f: "Où habites-tu ?", b: "Fin saken ?" },
-  { ch: "7", chNom: "Questions courantes", f: "Que fais-tu dans la vie ?", b: "Achnou kadir fi l7ayat ?" },
+  { ch: "7", chNom: "Questions courantes", f: "Que fais-tu dans la vie ?", b: "Achnou kadir fi l7ayat ?", audio: "audio/Que fais tu dans la vie.m4a" },
   { ch: "7", chNom: "Questions courantes", f: "Comment ça va ?", b: "Labas 3alik ? / Labas ?" },
   { ch: "7", chNom: "Questions courantes", f: "Où est ... ?", b: "Fin kayn ... ? / Fin ja ... ?" },
   { ch: "7", chNom: "Questions courantes", f: "Combien ça coûte ?", b: "Bch7al hada (hadi) ?" },
