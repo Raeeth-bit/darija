@@ -1,6 +1,6 @@
 // ============================================================
 //  📚 TES CARTES
-//  Format : { ch: "X", chNom: "Nom du chapitre", f: "Français", b: "Darija" }
+//  Format : { ch: "X", chNom: "Nom du chapitre", f: "Français", b: "Darija", audio: "audio/fichier.m4a" }
 // ============================================================
 
 const cardsData = [
@@ -85,7 +85,7 @@ const cardsData = [
   { ch: "6", chNom: "Mots interrogatifs", f: "Quand ?", b: "Imta / Fo9ach ?" },
   { ch: "6", chNom: "Mots interrogatifs", f: "Où ?", b: "Fin" },
   { ch: "6", chNom: "Mots interrogatifs", f: "Comment ?", b: "Ki fach ?" },
-  { ch: "6", chNom: "Mots interrogatifs", f: "Pourquoi ?", b: "3elach ?" },
+  { ch: "6", chNom: "Mots interrogatifs", f: "Pourquoi ?", b: "3elach ?", audio: "audio/pourquoi.m4a" },
   { ch: "6", chNom: "Mots interrogatifs", f: "Combien ?", b: "Ch7al ?" },
   { ch: "6", chNom: "Mots interrogatifs", f: "D'où ?", b: "Mnin ?" },
   { ch: "6", chNom: "Mots interrogatifs", f: "À qui ?", b: "Lemen ?" },
