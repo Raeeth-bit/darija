@@ -84,7 +84,6 @@
       color: var(--muted);
     }
 
-    /* Interrupteur double sens */
     .toggle-row {
       display: flex;
       align-items: center;
@@ -204,7 +203,7 @@
     .scene {
       width: 100%;
       max-width: 420px;
-      height: 240px;
+      height: 260px;
       perspective: 1200px;
       margin-bottom: 1rem;
       cursor: pointer;
@@ -241,7 +240,6 @@
       border-color: var(--accent);
     }
 
-    /* Quand le sens est inversé, le recto devient orange et le verso blanc */
     .face-front.darija-face {
       background: var(--accent);
       border-color: var(--accent);
@@ -283,6 +281,30 @@
     }
 
     .face-back.fr-face .face-hint { color: var(--muted); }
+
+    .btn-listen {
+      display: none;
+      margin-top: 1rem;
+      background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.4);
+      color: white;
+      padding: 7px 16px;
+      border-radius: 99px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .btn-listen:hover { background: rgba(255,255,255,0.3); }
+
+    .btn-listen.fr-mode {
+      border-color: var(--border);
+      color: var(--muted);
+      background: var(--accent-light);
+    }
+
+    .btn-listen.fr-mode:hover { background: var(--border); }
 
     .tap-hint {
       font-size: 0.78rem;
@@ -404,7 +426,6 @@
   </div>
 </div>
 
-<!-- Interrupteur double sens -->
 <div class="toggle-row">
   <div class="toggle-label">
     Mode double sens
@@ -454,6 +475,7 @@
       <div class="face-label" id="labelBack">Darija</div>
       <div class="face-word" id="wordBack">—</div>
       <div class="face-hint" id="wordHint"></div>
+      <button class="btn-listen" id="btnListen" onclick="playAudio(event)">🔊 Écouter</button>
     </div>
   </div>
 </div>
@@ -486,6 +508,7 @@
   let currentCard = null;
   let isFlipped = false;
   let roundCount = 0;
+  let currentAudio = null;
 
   function buildChapterMenu() {
     const sel = document.getElementById('chapterSelect');
@@ -560,7 +583,6 @@
 
     const idx = queue.shift();
     const doubleSens = document.getElementById('toggleDoubleSens').checked;
-    // En mode double sens, on tire au sort le sens de la carte
     const inverse = doubleSens && Math.random() < 0.5;
 
     currentCard = { ...allCards[idx], idx, inverse };
@@ -568,6 +590,7 @@
     isFlipped = false;
     document.getElementById('btnAnswer').classList.remove('visible');
     document.getElementById('tapHint').style.display = '';
+    document.getElementById('btnListen').style.display = 'none';
 
     const card = document.getElementById('card');
     card.classList.remove('flipped');
@@ -587,42 +610,67 @@
     const wordFront = document.getElementById('wordFront');
     const wordBack = document.getElementById('wordBack');
     const hint = document.getElementById('wordHint');
+    const btnListen = document.getElementById('btnListen');
 
     if (!c.inverse) {
-      // Sens normal : Français devant, Darija derrière
       faceFront.className = 'face face-front';
       faceBack.className = 'face face-back';
       labelFront.textContent = 'Français';
       labelBack.textContent = 'Darija';
       wordFront.textContent = c.f;
       wordBack.textContent = c.b;
+      btnListen.className = 'btn-listen';
     } else {
-      // Sens inversé : Darija devant, Français derrière
       faceFront.className = 'face face-front darija-face';
       faceBack.className = 'face face-back fr-face';
       labelFront.textContent = 'Darija';
       labelBack.textContent = 'Français';
       wordFront.textContent = c.b;
       wordBack.textContent = c.f;
+      btnListen.className = 'btn-listen fr-mode';
     }
 
     hint.textContent = c.chNom || `Chapitre ${c.ch}`;
+
+    // Afficher le bouton écouter seulement si un audio existe
+    btnListen.style.display = c.audio ? 'inline-block' : 'none';
   }
 
   function flipCard() {
-  const card = document.getElementById('card');
-  const flipped = card.classList.toggle('flipped');
-  if (!isFlipped && flipped) {
-    isFlipped = true;
-    setTimeout(() => {
-      document.getElementById('btnAnswer').classList.add('visible');
-      document.getElementById('tapHint').style.display = 'none';
-    }, 400);
+    const card = document.getElementById('card');
+    const flipped = card.classList.toggle('flipped');
+    if (!isFlipped && flipped) {
+      isFlipped = true;
+      setTimeout(() => {
+        document.getElementById('btnAnswer').classList.add('visible');
+        document.getElementById('tapHint').style.display = 'none';
+        // Afficher le bouton audio si disponible
+        if (currentCard && currentCard.audio) {
+          document.getElementById('btnListen').style.display = 'inline-block';
+        }
+      }, 400);
+    }
   }
-}
+
+  function playAudio(e) {
+    e.stopPropagation();
+    if (!currentCard || !currentCard.audio) return;
+    if (currentAudio) {
+      currentAudio.pause();
+      currentAudio.currentTime = 0;
+    }
+    currentAudio = new Audio(currentCard.audio);
+    currentAudio.play();
+  }
 
   function answer(knew) {
     const idx = currentCard.idx;
+
+    // Stopper l'audio en cours si besoin
+    if (currentAudio) {
+      currentAudio.pause();
+      currentAudio.currentTime = 0;
+    }
 
     if (knew) {
       mastered.add(idx);
