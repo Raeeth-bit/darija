@@ -1,110 +1,339 @@
-// ============================================================
-//  📚 TES CARTES
-//  Format : { ch: "X", chNom: "Nom du chapitre", f: "Français", b: "Darija", audio: "audio/fichier.m4a" }
-// ============================================================
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Les couleurs en Darija</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-const cardsData = [
+    body {
+      font-family: system-ui, sans-serif;
+      background: #f5f3ee;
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
 
-  // ----------------------------------------
-  // Chapitre 1 — Se présenter
-  // ----------------------------------------
-  { ch: "1", chNom: "Se présenter",
-    f: "Je m'appelle ... / Mon nom est ...",
-    b: "Ana smiti ... / Smiya diali ..." },
+    h1 {
+      text-align: center;
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: #2c2c2a;
+      margin-bottom: 0.4rem;
+    }
 
-  { ch: "1", chNom: "Se présenter",
-    f: "J'ai ... ans / Mon âge est ...",
-    b: "3endi ... 3am / 3emri ... 3am" },
+    .subtitle {
+      text-align: center;
+      font-size: 0.85rem;
+      color: #888;
+      margin-bottom: 2rem;
+    }
 
-  { ch: "1", chNom: "Se présenter",
-    f: "Je suis de (pays)",
-    b: "Ana men ..." },
+    /* ── Grille de cartes ── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 14px;
+      max-width: 860px;
+      margin: 0 auto;
+    }
 
-  { ch: "1", chNom: "Se présenter",
-    f: "Je suis (nationalité)",
-    b: "Ana ... (ex: Faransi)" },
+    /* ── Carte individuelle ── */
+    .card {
+      cursor: pointer;
+      height: 120px;
+      perspective: 700px;
+    }
 
-  // ----------------------------------------
-  // Chapitre 2 — Nombres 1-10
-  // ----------------------------------------
-  { ch: "2", chNom: "Nombres 1-10", f: "1 — Un", b: "Wahed" },
-  { ch: "2", chNom: "Nombres 1-10", f: "2 — Deux", b: "Jouj" },
-  { ch: "2", chNom: "Nombres 1-10", f: "3 — Trois", b: "Tlata" },
-  { ch: "2", chNom: "Nombres 1-10", f: "4 — Quatre", b: "Rb3a", audio: "audio/4.m4a" },
-  { ch: "2", chNom: "Nombres 1-10", f: "5 — Cinq", b: "Khmsa" },
-  { ch: "2", chNom: "Nombres 1-10", f: "6 — Six", b: "Stta" },
-  { ch: "2", chNom: "Nombres 1-10", f: "7 — Sept", b: "Sb3a", audio: "audio/7.m4a" },
-  { ch: "2", chNom: "Nombres 1-10", f: "8 — Huit", b: "Tmnya" },
-  { ch: "2", chNom: "Nombres 1-10", f: "9 — Neuf", b: "Ts3oud", audio: "audio/9.m4a" },
-  { ch: "2", chNom: "Nombres 1-10", f: "10 — Dix", b: "3chra", audio: "audio/10.m4a" },
+    .card-inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.45s cubic-bezier(.4,0,.2,1);
+    }
 
-  // ----------------------------------------
-  // Chapitre 3 — Nombres 11-20
-  // ----------------------------------------
-  { ch: "3", chNom: "Nombres 11-20", f: "11 — Onze", b: "Hdach" },
-  { ch: "3", chNom: "Nombres 11-20", f: "12 — Douze", b: "Tnach" },
-  { ch: "3", chNom: "Nombres 11-20", f: "13 — Treize", b: "Tlatch" },
-  { ch: "3", chNom: "Nombres 11-20", f: "14 — Quatorze", b: "Rb3tach", audio: "audio/14.m4a" },
-  { ch: "3", chNom: "Nombres 11-20", f: "15 — Quinze", b: "Khmstach" },
-  { ch: "3", chNom: "Nombres 11-20", f: "16 — Seize", b: "Sttach" },
-  { ch: "3", chNom: "Nombres 11-20", f: "17 — Dix-sept", b: "Sb3tach", audio: "audio/17.m4a" },
-  { ch: "3", chNom: "Nombres 11-20", f: "18 — Dix-huit", b: "Tmntach" },
-  { ch: "3", chNom: "Nombres 11-20", f: "19 — Dix-neuf", b: "Ts3tach" },
-  { ch: "3", chNom: "Nombres 11-20", f: "20 — Vingt", b: "3chrin", audio: "audio/20.m4a" },
+    .card.flipped .card-inner {
+      transform: rotateY(180deg);
+    }
 
-  // ----------------------------------------
-  // Chapitre 4 — Nombres 21-100
-  // ----------------------------------------
-  { ch: "4", chNom: "Nombres 21-100", f: "21 — Vingt-et-un", b: "Wahed w 3chrin" },
-  { ch: "4", chNom: "Nombres 21-100", f: "30 — Trente", b: "Tlatin" },
-  { ch: "4", chNom: "Nombres 21-100", f: "40 — Quarante", b: "Rb3in" },
-  { ch: "4", chNom: "Nombres 21-100", f: "50 — Cinquante", b: "Khmssin" },
-  { ch: "4", chNom: "Nombres 21-100", f: "60 — Soixante", b: "Sttin" },
-  { ch: "4", chNom: "Nombres 21-100", f: "70 — Soixante-dix", b: "Sb3in" },
-  { ch: "4", chNom: "Nombres 21-100", f: "80 — Quatre-vingts", b: "Tmnin" },
-  { ch: "4", chNom: "Nombres 21-100", f: "90 — Quatre-vingt-dix", b: "Ts3in" },
-  { ch: "4", chNom: "Nombres 21-100", f: "100 — Cent", b: "Mya" },
-  { ch: "4", chNom: "Nombres 21-100", f: "Règle : 35, 47...", b: "Unité + w + dizaine (ex: 35 = khmsa w tlatin)" },
+    .face {
+      position: absolute;
+      inset: 0;
+      border-radius: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border: 1px solid rgba(0,0,0,0.08);
+      gap: 6px;
+    }
 
-  // ----------------------------------------
-  // Chapitre 5 — Nombres 100+
-  // ----------------------------------------
-  { ch: "5", chNom: "Nombres 100+", f: "100 — Cent", b: "Mya" },
-  { ch: "5", chNom: "Nombres 100+", f: "200 — Deux cents", b: "Myatayn" },
-  { ch: "5", chNom: "Nombres 100+", f: "300 — Trois cents", b: "Tlat mya" },
-  { ch: "5", chNom: "Nombres 100+", f: "1 000 — Mille", b: "Alf" },
-  { ch: "5", chNom: "Nombres 100+", f: "2 000 — Deux mille", b: "Joj laf" },
-  { ch: "5", chNom: "Nombres 100+", f: "1 000 000 — Un million", b: "Mlyoun" },
-  { ch: "5", chNom: "Nombres 100+", f: "Règle : 250, 350...", b: "Centaine + w + reste (ex: 250 = myatayn w khmssin)" },
+    .front { background: #fff; }
 
-  // ----------------------------------------
-  // Chapitre 6 — Mots interrogatifs
-  // ----------------------------------------
-  { ch: "6", chNom: "Mots interrogatifs", f: "Quoi ?", b: "Chnou ?" },
-  { ch: "6", chNom: "Mots interrogatifs", f: "Qui ?", b: "Chkoun ?" },
-  { ch: "6", chNom: "Mots interrogatifs", f: "Quand ?", b: "Imta / Fo9ach ?" },
-  { ch: "6", chNom: "Mots interrogatifs", f: "Où ?", b: "Fin" },
-  { ch: "6", chNom: "Mots interrogatifs", f: "Comment ?", b: "Ki fach ?" },
-  { ch: "6", chNom: "Mots interrogatifs", f: "Pourquoi ?", b: "3elach ?", audio: "audio/pourquoi.m4a" },
-  { ch: "6", chNom: "Mots interrogatifs", f: "Combien ?", b: "Ch7al ?", audio: "audio/combien.m4a" },
-  { ch: "6", chNom: "Mots interrogatifs", f: "D'où ?", b: "Mnin ?" },
-  { ch: "6", chNom: "Mots interrogatifs", f: "À qui ?", b: "Lemen ?" },
-  { ch: "6", chNom: "Mots interrogatifs", f: "Lequel ?", b: "Achmen ?", audio: "audio/lequel.m4a" },
-  { ch: "6", chNom: "Mots interrogatifs", f: "Avec qui ?", b: "M3amen ?", audio: "audio/avec qui.m4a" },
-  { ch: "6", chNom: "Mots interrogatifs", f: "Est-ce que ?", b: "Wach ?" },
+    .back {
+      transform: rotateY(180deg);
+      gap: 4px;
+    }
 
-  // ----------------------------------------
-  // Chapitre 7 — Questions courantes
-  // ----------------------------------------
-  { ch: "7", chNom: "Questions courantes", f: "Comment tu t'appelles ?", b: "Chnou smitek ?", audio: "audio/Comment tu t'appelles _.m4a" },
-  { ch: "7", chNom: "Questions courantes", f: "D'où viens-tu ?", b: "Mnin jiti ? / Mnin nta (nti) ?" },
-  { ch: "7", chNom: "Questions courantes", f: "Quel âge as-tu ?", b: "Ch7al fi 3emrek ? / Ch7al 3endek ?", audio: "audio/Quel age as tu.m4a" },
-  { ch: "7", chNom: "Questions courantes", f: "Où habites-tu ?", b: "Fin saken ?" },
-  { ch: "7", chNom: "Questions courantes", f: "Que fais-tu dans la vie ?", b: "Achnou kadir fi l7ayat ?", audio: "audio/Que fais tu dans la vie.m4a" },
-  { ch: "7", chNom: "Questions courantes", f: "Comment ça va ?", b: "Labas 3alik ? / Labas ?" },
-  { ch: "7", chNom: "Questions courantes", f: "Où est ... ?", b: "Fin kayn ... ? / Fin ja ... ?" },
-  { ch: "7", chNom: "Questions courantes", f: "Combien ça coûte ?", b: "Bch7al hada (hadi) ?" },
-  { ch: "7", chNom: "Questions courantes", f: "Quelle heure est-il ?", b: "Ch7al fi sa3a ?" },
-  { ch: "7", chNom: "Questions courantes", f: "Tu peux répéter stp ?", b: "Momkin t3awed (i), 3afak ?" },
+    .dot {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 1px solid rgba(0,0,0,0.15);
+      flex-shrink: 0;
+    }
 
-];
+    .front-label {
+      font-size: 15px;
+      font-weight: 600;
+      color: #2c2c2a;
+    }
+
+    .hint {
+      font-size: 11px;
+      color: #aaa;
+    }
+
+    .back-masc {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .back-fem {
+      font-size: 13px;
+      opacity: 0.8;
+    }
+
+    .back-tag {
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.25);
+      margin-bottom: 2px;
+    }
+
+    /* ── Bouton audio ── */
+    .audio-btn {
+      margin-top: 4px;
+      background: rgba(255,255,255,0.3);
+      border: 1px solid rgba(255,255,255,0.5);
+      border-radius: 20px;
+      padding: 3px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: background 0.2s;
+    }
+
+    .audio-btn:hover { background: rgba(255,255,255,0.5); }
+
+    .audio-btn svg {
+      width: 13px;
+      height: 13px;
+      fill: currentColor;
+    }
+
+    /* ── Section nuances ── */
+    .section-label {
+      max-width: 860px;
+      margin: 1.8rem auto 0.6rem;
+      font-size: 13px;
+      font-weight: 600;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .extras {
+      display: flex;
+      gap: 14px;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .extras .card {
+      flex: 1;
+      height: 90px;
+    }
+
+    /* ── Barre d'actions ── */
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 860px;
+      margin: 0 auto 1.2rem;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .toolbar span {
+      font-size: 13px;
+      color: #888;
+    }
+
+    .btn {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 6px 14px;
+      font-size: 13px;
+      cursor: pointer;
+      color: #444;
+      transition: background 0.15s;
+    }
+
+    .btn:hover { background: #f0ede8; }
+  </style>
+</head>
+<body>
+
+<h1>Les couleurs — الدارجة</h1>
+<p class="subtitle">Clique sur une carte pour voir la traduction · clique sur 🔊 pour écouter</p>
+
+<div class="toolbar">
+  <span id="progress">0 / 11 retournées</span>
+  <div style="display:flex; gap:8px;">
+    <button class="btn" onclick="shuffleCards()">Mélanger</button>
+    <button class="btn" onclick="resetAll()">Tout remettre</button>
+  </div>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<p class="section-label">Nuances</p>
+<div class="extras" id="extras"></div>
+
+<script>
+  // ════════════════════════════════════════════════
+  //  DONNÉES — modifie ici pour ajouter / retirer
+  // ════════════════════════════════════════════════
+  const colors = [
+    { fr: "Rouge",  masc: "7mer",            fem: "7emra",          hex: "#E24B4A", audio: "rouge.mp3" },
+    { fr: "Bleu",   masc: "Zre9",            fem: "Zer9a",          hex: "#378ADD", audio: "bleu.mp3"  },
+    { fr: "Vert",   masc: "Khder",           fem: "Khedra",         hex: "#639922", audio: "vert.mp3"  },
+    { fr: "Jaune",  masc: "Sfer",            fem: "Sefra",          hex: "#EF9F27", audio: "jaune.mp3" },
+    { fr: "Rose",   masc: "Rose",            fem: "Rosia",          hex: "#D4537E", audio: "rose.mp3"  },
+    { fr: "Violet", masc: "Banafsaji",       fem: "Banafsajia",     hex: "#7F77DD", audio: "violet.mp3"},
+    { fr: "Orange", masc: "Limouni",         fem: "Limounia",       hex: "#D85A30", audio: "orange.mp3"},
+    { fr: "Marron", masc: "9hwi / Bounni",   fem: "9hwia / Bounnia",hex: "#633806", audio: "marron.mp3"},
+    { fr: "Noir",   masc: "K7el",            fem: "Ke7la",          hex: "#2C2C2A", audio: "noir.mp3"  },
+    { fr: "Gris",   masc: "Gris",            fem: "Gria",           hex: "#888780", audio: "gris.mp3"  },
+    { fr: "Blanc",  masc: "Byed",            fem: "Bida",           hex: "#e8e6df", audio: "blanc.mp3" },
+  ];
+
+  const nuances = [
+    { fr: "Clair",  darija: "Fate7",  hex: "#b8d4f0", audio: "clair.mp3"  },
+    { fr: "Foncé",  darija: "Ghame9", hex: "#1a3a5c", audio: "fonce.mp3"  },
+  ];
+
+  // ════════════════════════════════════════════════
+  //  UTILITAIRES
+  // ════════════════════════════════════════════════
+  function textColor(hex) {
+    const r = parseInt(hex.slice(1,3),16);
+    const g = parseInt(hex.slice(3,5),16);
+    const b = parseInt(hex.slice(5,7),16);
+    return (0.299*r + 0.587*g + 0.114*b) / 255 > 0.55 ? "#2c2c2a" : "#f5f3ee";
+  }
+
+  function playAudio(file, e) {
+    e.stopPropagation();
+    // Remplace "audio/" par le chemin de ton dossier audio
+    const audio = new Audio("audio/" + file);
+    audio.play().catch(() => alert("Audio introuvable : " + file));
+  }
+
+  function speakerIcon() {
+    return `<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
+    </svg>`;
+  }
+
+  let flippedCount = 0;
+  function updateProgress() {
+    document.getElementById("progress").textContent =
+      `${flippedCount} / ${colors.length} retournées`;
+  }
+
+  // ════════════════════════════════════════════════
+  //  CONSTRUCTION DES CARTES
+  // ════════════════════════════════════════════════
+  function buildCard(item, isNuance = false) {
+    const tc = textColor(item.hex);
+    const card = document.createElement("div");
+    card.className = "card";
+
+    const backContent = isNuance
+      ? `<span class="back-masc" style="color:${tc};">${item.darija}</span>`
+      : `<span class="back-tag" style="color:${tc};">♂ / ♀</span>
+         <span class="back-masc" style="color:${tc};">${item.masc}</span>
+         <span class="back-fem"  style="color:${tc};">${item.fem}</span>`;
+
+    card.innerHTML = `
+      <div class="card-inner">
+        <div class="face front">
+          <div class="dot" style="background:${item.hex};"></div>
+          <span class="front-label">${item.fr}</span>
+          <span class="hint">cliquer ↓</span>
+        </div>
+        <div class="face back" style="background:${item.hex}; border-color:transparent;">
+          ${backContent}
+          <button class="audio-btn" style="color:${tc};" onclick="playAudio('${item.audio}', event)">
+            ${speakerIcon()} écouter
+          </button>
+        </div>
+      </div>`;
+
+    card.addEventListener("click", () => {
+      const wasFlipped = card.classList.contains("flipped");
+      card.classList.toggle("flipped");
+      flippedCount += wasFlipped ? -1 : 1;
+      updateProgress();
+    });
+
+    return card;
+  }
+
+  // ════════════════════════════════════════════════
+  //  RENDU
+  // ════════════════════════════════════════════════
+  let cardElements = [];
+
+  function renderGrid() {
+    const grid = document.getElementById("grid");
+    grid.innerHTML = "";
+    cardElements = colors.map(c => {
+      const el = buildCard(c);
+      grid.appendChild(el);
+      return el;
+    });
+
+    const extras = document.getElementById("extras");
+    extras.innerHTML = "";
+    nuances.forEach(n => extras.appendChild(buildCard(n, true)));
+
+    flippedCount = 0;
+    updateProgress();
+  }
+
+  function shuffleCards() {
+    colors.sort(() => Math.random() - 0.5);
+    renderGrid();
+  }
+
+  function resetAll() {
+    document.querySelectorAll(".card.flipped").forEach(c => c.classList.remove("flipped"));
+    flippedCount = 0;
+    updateProgress();
+  }
+
+  renderGrid();
+</script>
+</body>
+</html>
